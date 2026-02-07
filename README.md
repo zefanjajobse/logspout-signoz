@@ -65,7 +65,7 @@ docker run -d \
         --volume=/var/run/docker.sock:/var/run/docker.sock \
         -e 'SIGNOZ_LOG_ENDPOINT=http://1.2.3.4:8082' \
         -e 'ENV=prod' \
-        pavanputhra/logspout-signoz \
+        zefanjajobse/logspout-signoz \
         signoz://localhost:8082
 ```
 
@@ -89,7 +89,7 @@ In a nutshell, copy the contents of the `custom` folder and add the following im
 package main
 
 import (
-  _ "github.com/pavanputhra/logspout-signoz/signoz"
+  _ "github.com/zefanjajobse/logspout-signoz/signoz"
   // ...
 )
 ```

@@ -1,4 +1,4 @@
-module github.com/pavanputhra/logspout-signoz
+module github.com/zefanjajobse/logspout-signoz
 
 go 1.22.5
 

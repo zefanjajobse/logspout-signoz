@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"strings"
 	"sync"
 	"time"
@@ -38,6 +39,21 @@ func contains(slice []string, item string) bool {
 func init() {
 	router.AdapterFactories.Register(NewSignozAdapter, "signoz")
 }
+
+func getHostname() string {
+	if hostname := os.Getenv("HOSTNAME"); hostname != "" {
+		return hostname
+	}
+
+	cmd := exec.Command("hostname")
+	output, err := cmd.Output()
+	if err != nil {
+		log.Println("Error getting hostname:", err)
+		return "unknown"
+	}
+	return strings.TrimSpace(string(output))
+}
+
 
 //var funcs = template.FuncMap{
 //	"toJSON": func(value interface{}) string {
@@ -90,12 +106,14 @@ func NewSignozAdapter(route *router.Route) (router.LogAdapter, error) {
 			}
 		}
 	}
+	hostname := getHostname()
 
 	return &Adapter{
 		route:                   route,
 		autoParseJson:           autoParseJson,
 		autoLogLevelStringMatch: autoLogLevelStringMatch,
 		env:                     envValue,
+		hostname:                hostname,
 		filterName:              filterName,
 		filterID:                filterID,
 		filterSources:           filterSources,
@@ -110,6 +128,7 @@ type Adapter struct {
 	autoParseJson           bool
 	autoLogLevelStringMatch bool
 	env                     string
+	hostname                string
 	filterName              string
 	filterID                string
 	filterSources           []string
@@ -180,6 +199,7 @@ func (a *Adapter) Stream(logStream chan *router.Message) {
 			Attributes:     map[string]string{},
 			Resources: map[string]string{
 				"service.name": serviceName,
+				"host.name":    a.hostname,
 			},
 			Message: message.Data,
 		}
