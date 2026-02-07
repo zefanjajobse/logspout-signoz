@@ -43,5 +43,5 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            ${{ github.repository }}:latest
-            ${{ github.repository }}:${{ env.DATE }}-${{ env.GIT_SHA }}
+            zefanjajobse/logspout-signoz:latest
+            zefanjajobse/logspout-signoz:${{ env.DATE }}-${{ env.GIT_SHA }}
